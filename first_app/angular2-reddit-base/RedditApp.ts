@@ -4,7 +4,7 @@ import { bootstrap } from 'angular2/platform/browser'; // relative import for re
 import { Component } from 'angular2/core'; // relative import for resolving modules
 
 @Component({
-    selector: 'reddit',
+    selector: 'reddit-app',
     template: `<form class="ui large form segment">
  <h3 class="ui header">Add a Link</h3>
 
