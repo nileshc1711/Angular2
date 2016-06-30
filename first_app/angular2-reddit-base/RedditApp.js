@@ -32,6 +32,15 @@ System.register(['angular2/platform/browser', 'angular2/core'], function(exports
                 Article.prototype.voteDown = function () {
                     this.votes -= 1;
                 };
+                Article.prototype.domain = function () {
+                    try {
+                        var link = this.link.split('//')[1];
+                        return link.split('/')[0];
+                    }
+                    catch (error) {
+                        return null;
+                    }
+                };
                 return Article;
             })();
             ///Data-Objects -end
@@ -56,7 +65,7 @@ System.register(['angular2/platform/browser', 'angular2/core'], function(exports
                         host: {
                             class: 'row'
                         },
-                        template: "\n    <div class=\"four wide column center aligned votes\">\n    <div class=\"ui statistic\">\n    <div class=\"value\">{{article.votes}}</div>\n    <div class=\"label\"> Points</div>\n    </div>\n    </div>\n    <div class=\"twelve wide column\">\n    <a class=\"ui large header\" href=\"{{article.link}}\">{{article.title}}</a>\n    <ul class=\"ui big horizontal list voters\">\n    <li class=\"item\">\n    <a href (click)=\"voteUp()\">\n    <i class=\"arrow up icon\"></i>\n    upvote\n    </a>\n    </li>\n    <li class=\"item\">\n    <a href (click)=\"voteDown()\">\n    <i class=\"arrow down icon\"></i>\n    downvote\n    </a>\n    </li>\n    </ul>\n    </div>\n\n    "
+                        template: "\n    <div class=\"four wide column center aligned votes\">\n    <div class=\"ui statistic\">\n    <div class=\"value\">{{article.votes}}</div>\n    <div class=\"label\"> Points</div>\n    </div>\n    </div>\n    <div class=\"twelve wide column\">\n    <a class=\"ui large header\" href=\"{{article.link}}\">{{article.title}}</a>\n    <div class=\"meta\">({{ article.domain() }})</div>\n    <ul class=\"ui big horizontal list voters\">\n    <li class=\"item\">\n    <a href (click)=\"voteUp()\">\n    <i class=\"arrow up icon\"></i>\n    upvote\n    </a>\n    </li>\n    <li class=\"item\">\n    <a href (click)=\"voteDown()\">\n    <i class=\"arrow down icon\"></i>\n    downvote\n    </a>\n    </li>\n    </ul>\n    </div>\n\n    "
                     }), 
                     __metadata('design:paramtypes', [])
                 ], ArtileComponent);
@@ -67,22 +76,26 @@ System.register(['angular2/platform/browser', 'angular2/core'], function(exports
             RedditApp = (function () {
                 function RedditApp() {
                     this.articles = [
-                        new Article('Angular 2', 'http://angular.io', 3),
+                        new Article('Angular 2', 'http://angular.io', 6),
                         new Article('Fullstack', 'http://fullstack.io', 2),
-                        new Article('Angular Homepage', 'http://angular.io', 1)
+                        new Article('Angular Homepage', 'http://angular.io', 5)
                     ];
                 }
                 RedditApp.prototype.addArticle = function (title, link) {
                     console.log("Adding article title: " + title.value + "  and link : " + link.value);
-                    this.articles.push(new Article(title.value, link.value, 0));
+                    if (title.value)
+                        this.articles.push(new Article(title.value, link.value, 0));
                     title.value = '';
                     link.value = '';
+                };
+                RedditApp.prototype.sortedArticles = function () {
+                    return this.articles.sort(function (a, b) { return b.votes - a.votes; });
                 };
                 RedditApp = __decorate([
                     core_1.Component({
                         selector: 'reddit-app',
                         directives: [ArtileComponent],
-                        template: "<form class=\"ui large form segment\">\n <h3 class=\"ui header\">Add a Link</h3>\n\n <div class=\"field\">\n <label for=\"title\">Title:</label>\n <input name=\"title\" #newtitle> <!--The #newtitle syntax is used to bind input elements to the value variables-->\n </div>\n <div class=\"field\">\n <label for=\"link\">Link:</label>\n <input name=\"link\" #newlink> <!--The #newlink syntax is used to bind input elements to the value variables-->\n </div>\n <button (click)=\"addArticle(newtitle,newlink)\" class=\"ui positive right floated button\" >\n Submit Link\n </button>\n </form>\n<div class=\"ui grid posts\">\n<reddit-article\n*ngFor=\"#article of articles\" [article]=\"article\">\n\n</reddit-article>\n</div>\n\n    "
+                        template: "<form class=\"ui large form segment\">\n <h3 class=\"ui header\">Add a Link</h3>\n\n <div class=\"field\">\n <label for=\"title\">Title:</label>\n <input name=\"title\" #newtitle> <!--The #newtitle syntax is used to bind input elements to the value variables-->\n </div>\n <div class=\"field\">\n <label for=\"link\">Link:</label>\n <input name=\"link\" #newlink> <!--The #newlink syntax is used to bind input elements to the value variables-->\n </div>\n <button (click)=\"addArticle(newtitle,newlink)\" class=\"ui positive right floated button\" >\n Submit Link\n </button>\n </form>\n<div class=\"ui grid posts\">\n<reddit-article\n*ngFor=\"#article of sortedArticles()\" [article]=\"article\">\n\n</reddit-article>\n</div>\n\n    "
                     }), 
                     __metadata('design:paramtypes', [])
                 ], RedditApp);
