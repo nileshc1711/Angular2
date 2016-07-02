@@ -9,7 +9,7 @@ System.register(['angular2/core', 'angular2/platform/browser'], function(exports
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1, browser_1;
-    var Product, ProductRow, ProductsList, InventoryApp;
+    var Product, ProductDepartment, PriceDisplay, ProductImage, ProductRow, ProductsList, InventoryApp;
     return {
         setters:[
             function (core_1_1) {
@@ -33,6 +33,54 @@ System.register(['angular2/core', 'angular2/platform/browser'], function(exports
                 }
                 return Product;
             })();
+            ///The ProductDepartment Component -start
+            ProductDepartment = (function () {
+                function ProductDepartment() {
+                }
+                ProductDepartment = __decorate([
+                    core_1.Component({
+                        selector: 'product-department',
+                        inputs: ['product'],
+                        template: "\n    <div class=\"product-department\">\n    <span *ngFor=\"#name of product.department; #i=index \">\n    <a href=\"#\"> {{ name }} </a>\n    <span>{{i < (product.department.length-1) ? '>' : ''}}</span>\n    </span>\n    </div>\n    "
+                    }), 
+                    __metadata('design:paramtypes', [])
+                ], ProductDepartment);
+                return ProductDepartment;
+            })();
+            ///The ProductDepartment Component -end
+            ///The PriceDisplay Component -start
+            PriceDisplay = (function () {
+                function PriceDisplay() {
+                }
+                PriceDisplay = __decorate([
+                    core_1.Component({
+                        selector: 'price-display',
+                        inputs: ['price'],
+                        template: "\n    <div class=\"price-display\">${{price}} </div>\n    "
+                    }), 
+                    __metadata('design:paramtypes', [])
+                ], PriceDisplay);
+                return PriceDisplay;
+            })();
+            ///The PriceDisplay Component -end
+            ///The ProductImage Component -start
+            ProductImage = (function () {
+                function ProductImage() {
+                }
+                ProductImage = __decorate([
+                    core_1.Component({
+                        selector: 'product-image',
+                        host: {
+                            class: 'ui small image'
+                        },
+                        inputs: ['product'],
+                        template: "\n    <img class=\"product-image\" [src]=\"product.imageUrl\" />\n    "
+                    }), 
+                    __metadata('design:paramtypes', [])
+                ], ProductImage);
+                return ProductImage;
+            })();
+            ///The ProductImage Component -end
             ///Product-Row Component-start
             ProductRow = (function () {
                 function ProductRow() {
@@ -44,7 +92,7 @@ System.register(['angular2/core', 'angular2/platform/browser'], function(exports
                         host: {
                             'class': 'item'
                         },
-                        //directives:[ProductImage, ProductDepartment, PriceDisplay]
+                        directives: [ProductImage, ProductDepartment, PriceDisplay],
                         template: "\n    <product-image  [product]=\"product\" ></product-image>\n    <div class=\"content\">\n    <div class=\"header\">{{ product.name }} </div>\n    <div class=\"meta\">\n    <div class=\"product-sku\">SKU # {{product.sku}} </div>\n    </div>\n    <div class=description>\n    <product-department [product]=\"product\" ></product-department>\n    </div>\n    </div>\n    <price-display [price]=\"product.price\"></price-display>\n    "
                     }), 
                     __metadata('design:paramtypes', [])
@@ -92,14 +140,14 @@ System.register(['angular2/core', 'angular2/platform/browser'], function(exports
                         new Product('NEATOJACKET', 'Blue Jacket', '/resources/images/products/blue-jacket.jpg', ['Women', 'Apparel', 'Jackets & Vests'], 238.99),
                     ];
                 }
-                InventoryApp.prototype.onProductWasSelected = function (product) {
-                    console.log('Product clicked ' + product);
+                InventoryApp.prototype.ProductWasSelected = function (product) {
+                    console.log('Product clicked ' + product.name);
                 };
                 InventoryApp = __decorate([
                     core_1.Component({
                         selector: 'inventory-app',
                         directives: [ProductsList],
-                        template: "\n    <div class=\"inventory-app\">\n    <product-list \n     [productList]=\"products\" (onProductSelected)=\"ProductWasSelected($event)\" >\n    </product-list>\n        <h1>{{ product.name }}</h1>\n        <span> {{ product.sku }} </span>\n    </div>\n    "
+                        template: "\n    <div class=\"inventory-app\">\n    <product-list \n     [productList]=\"products\" (onProductSelected)=\"ProductWasSelected($event)\" >\n    </product-list>\n    </div>\n    "
                     }), 
                     __metadata('design:paramtypes', [])
                 ], InventoryApp);

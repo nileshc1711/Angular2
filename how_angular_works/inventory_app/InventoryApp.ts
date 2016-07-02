@@ -10,6 +10,70 @@ class Product {
     }
 }
 
+///The ProductDepartment Component -start
+@Component({
+    selector: 'product-department',
+    inputs : ['product'],
+    template : `
+    <div class="product-department">
+    <span *ngFor="#name of product.department; #i=index ">
+    <a href="#"> {{ name }} </a>
+    <span>{{i < (product.department.length-1) ? '>' : ''}}</span>
+    </span>
+    </div>
+    `
+})
+
+/**
+ * ProductDepartment
+ */
+class ProductDepartment {
+    product : Product;
+}
+
+///The ProductDepartment Component -end
+
+
+
+///The PriceDisplay Component -start
+@Component({
+    selector:'price-display',
+    inputs: ['price'],
+    template :`
+    <div class="price-display">\${{price}} </div>
+    `
+     
+})
+
+class PriceDisplay{
+    price :number;
+    
+}
+///The PriceDisplay Component -end
+
+
+///The ProductImage Component -start
+@Component({
+    selector:'product-image',
+    host:{
+        class:'ui small image'  
+    },
+    inputs :['product'],
+    template:`
+    <img class="product-image" [src]="product.imageUrl" />
+    `
+})
+
+/**
+ * ProductImage
+ */
+class ProductImage {
+    product : Product
+}
+
+///The ProductImage Component -end
+
+
 ///Product-Row Component-start
 @Component({
     selector:'product-row',
@@ -17,7 +81,7 @@ class Product {
     host:{
         'class':'item'
     },
-    //directives:[ProductImage, ProductDepartment, PriceDisplay]
+    directives:[ProductImage, ProductDepartment, PriceDisplay],
     template:`
     <product-image  [product]="product" ></product-image>
     <div class="content">
@@ -94,8 +158,6 @@ class ProductsList {
     <product-list 
      [productList]="products" (onProductSelected)="ProductWasSelected($event)" >
     </product-list>
-        <h1>{{ product.name }}</h1>
-        <span> {{ product.sku }} </span>
     </div>
     `
 
@@ -122,8 +184,8 @@ class InventoryApp {
         ]
     }
 
-    onProductWasSelected(product: Product): void {
-        console.log('Product clicked ' + product);
+    ProductWasSelected(product: Product): void {
+        console.log('Product clicked ' + product.name);
     }
 
 }
